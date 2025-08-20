@@ -43,9 +43,9 @@ export default async (req, res) => {
     return res.status(200).end();
   }
 
-  if (text.startsWith("/inventory") && isAdmin) {
+  if (text.startsWith("/list") && isAdmin) {
     const list = forbiddenWords.length ? forbiddenWords.map(w => `\`${w}\``).join(", ") : "_No forbidden words_";
-    await send(chatId, `_ Restricted words:\n${list}`, messageId, "Markdown");
+    await send(chatId, ` Restricted words: \n${list}`, messageId, "Markdown");
     return res.status(200).end();
   }
 
