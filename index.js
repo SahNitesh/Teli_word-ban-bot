@@ -25,7 +25,7 @@ export default async (req, res) => {
   const text = (userText).toLowerCase().normalize("NFKD").replace(/\p{Diacritic}/gu, "");
   const isAdmin = ADMIN_IDS.includes(userId);
 
-  if (text.startsWith("/include ") && isAdmin) {
+  if (text.startsWith("/add") && isAdmin) {
     const word = text.slice(5).trim();
     if (word && !forbiddenWords.includes(word)) {
       forbiddenWords.push(word);
@@ -36,7 +36,7 @@ export default async (req, res) => {
     return res.status(200).end();
   }
 
-  if (text.startsWith("/exclude ") && isAdmin) {
+  if (text.startsWith("/remove") && isAdmin) {
     const word = text.slice(8).trim();
     forbiddenWords = forbiddenWords.filter(w => w !== word);
     await send(chatId, `🗑 Removed restricted word: \`${word}\``, messageId);
