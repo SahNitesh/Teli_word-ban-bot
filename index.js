@@ -25,27 +25,27 @@ export default async (req, res) => {
   const text = (userText).toLowerCase().normalize("NFKD").replace(/\p{Diacritic}/gu, "");
   const isAdmin = ADMIN_IDS.includes(userId);
 
-  if (text.startsWith("/add ") && isAdmin) {
+  if (text.startsWith("/include ") && isAdmin) {
     const word = text.slice(5).trim();
     if (word && !forbiddenWords.includes(word)) {
       forbiddenWords.push(word);
-      await send(chatId, `✅ Added forbidden word: \`${word}\``, messageId);
+      await send(chatId, `✔ Added restricted word: \`${word}\``, messageId);
     } else {
-      await send(chatId, `⚠️ Word already exists or invalid.`, messageId);
+      await send(chatId, `⚠ Word already exists or is invalid.`, messageId);
     }
     return res.status(200).end();
   }
 
-  if (text.startsWith("/remove ") && isAdmin) {
+  if (text.startsWith("/exclude ") && isAdmin) {
     const word = text.slice(8).trim();
     forbiddenWords = forbiddenWords.filter(w => w !== word);
-    await send(chatId, `🗑️ Removed forbidden word: \`${word}\``, messageId);
+    await send(chatId, `🗑 Removed restricted word: \`${word}\``, messageId);
     return res.status(200).end();
   }
 
-  if (text.startsWith("/list") && isAdmin) {
+  if (text.startsWith("/inventory") && isAdmin) {
     const list = forbiddenWords.length ? forbiddenWords.map(w => `\`${w}\``).join(", ") : "_No forbidden words_";
-    await send(chatId, `📃 Forbidden words:\n${list}`, messageId, "Markdown");
+    await send(chatId, `_ Restricted words:\n${list}`, messageId, "Markdown");
     return res.status(200).end();
   }
 
@@ -58,7 +58,7 @@ export default async (req, res) => {
 
       for (const adminId of ADMIN_IDS) {
         if (!adminId.startsWith("-")) {
-          const notifyText = `🚫 *Message Deleted*\n\n👤 User: [${userFullName}](tg://user?id=${userId})\n🆔 User ID: \`${userId}\`\n\n🗨️ Message: \`${userText}\`\n\n🏷️ Group: *${chatTitle}*\n🆔 Group ID: \`${chatId}\`\n📂 Type: *${chatTypeLabel}*`;
+          const notifyText = `-!- *Message Deleted*\n\n👤 User: [${userFullName}](tg://user?id=${userId})\n🆔 User ID: \`${userId}\`\n\n Message: \`${userText}\`\n\n🏷️ Group: *${chatTitle}*\n Group ID: \`${chatId}\`\n Type: *${chatTypeLabel}*`;
           await send(adminId, notifyText, null, "Markdown");
         }
       }
