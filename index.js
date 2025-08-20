@@ -29,9 +29,9 @@ export default async (req, res) => {
     const word = text.slice(5).trim();
     if (word && !forbiddenWords.includes(word)) {
       forbiddenWords.push(word);
-      await send(chatId, `✔ Added restricted word: \`${word}\``, messageId);
+      await send(chatId, ` Added restricted word: \`${word}\``, messageId);
     } else {
-      await send(chatId, `⚠ Word already exists or is invalid.`, messageId);
+      await send(chatId, ` Word already exists or is invalid.`, messageId);
     }
     return res.status(200).end();
   }
@@ -39,7 +39,7 @@ export default async (req, res) => {
   if (text.startsWith("/remove") && isAdmin) {
     const word = text.slice(8).trim();
     forbiddenWords = forbiddenWords.filter(w => w !== word);
-    await send(chatId, `🗑 Removed restricted word: \`${word}\``, messageId);
+    await send(chatId, ` Removed restricted word: \`${word}\``, messageId);
     return res.status(200).end();
   }
 
